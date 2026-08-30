@@ -1,0 +1,40 @@
+{
+  "packages": {
+    "color-demo": {
+      "1.0.0": {
+        "dependencies": [],
+        "files": {
+          "color_demo/__init__.py": "__version__ = \"1.0.0\"\n\ndef paint(text: str) -> str:\n    return f\"[blue]{text}[/blue]\"\n"
+        }
+      },
+      "2.0.0": {
+        "dependencies": [],
+        "files": {
+          "color_demo/__init__.py": "__version__ = \"2.0.0\"\n\ndef paint(text: str) -> str:\n    return f\"<blue>{text}</blue>\"\n"
+        }
+      }
+    },
+    "greet-demo": {
+      "1.0.0": {
+        "dependencies": ["color-demo>=1,<2"],
+        "files": {
+          "greet_demo/__init__.py": "from color_demo import paint\n\n__version__ = \"1.0.0\"\n\ndef greet(name: str) -> str:\n    return paint(f\"Hello, {name}!\")\n"
+        }
+      },
+      "2.0.0": {
+        "dependencies": ["color-demo>=2,<3"],
+        "files": {
+          "greet_demo/__init__.py": "from color_demo import paint\n\n__version__ = \"2.0.0\"\n\ndef greet(name: str) -> str:\n    return paint(f\"Welcome, {name}!\")\n"
+        }
+      }
+    },
+    "legacy-demo": {
+      "1.0.0": {
+        "dependencies": ["greet-demo<2"],
+        "files": {
+          "legacy_demo/__init__.py": "from greet_demo import greet\n\n__version__ = \"1.0.0\"\n\ndef legacy_greet(name: str) -> str:\n    return \"legacy: \" + greet(name)\n"
+        }
+      }
+    }
+  }
+}

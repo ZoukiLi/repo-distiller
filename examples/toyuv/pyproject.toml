@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "toyuv"
+version = "0.1.0"
+description = "A teaching-sized Python package manager inspired by uv"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "toyuv contributors" }]
+dependencies = []
+
+[project.scripts]
+toyuv = "toyuv.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/toyuv"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

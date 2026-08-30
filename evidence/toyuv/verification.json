@@ -1,0 +1,123 @@
+{
+  "commands": [
+    {
+      "command": [
+        "<python>",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "cwd": "<repo>\\examples\\toyuv",
+      "duration_ms": 713,
+      "label": "unit-and-integration-tests",
+      "returncode": 0,
+      "stderr": "test_failed_add_restores_pyproject (test_cli.CliTests.test_failed_add_restores_pyproject) ... ok\ntest_exact_sync_removes_packages_not_in_new_lock (test_environment.EnvironmentTests.test_exact_sync_removes_packages_not_in_new_lock) ... ok\ntest_sync_installs_importable_files_and_is_idempotent (test_environment.EnvironmentTests.test_sync_installs_importable_files_and_is_idempotent) ... ok\ntest_sync_rejects_a_tampered_dependency_graph (test_environment.EnvironmentTests.test_sync_rejects_a_tampered_dependency_graph) ... ok\ntest_add_updates_only_dependency_state (test_project_and_lock.ProjectAndLockTests.test_add_updates_only_dependency_state) ... ok\ntest_invalid_existing_lock_is_not_silently_overwritten (test_project_and_lock.ProjectAndLockTests.test_invalid_existing_lock_is_not_silently_overwritten) ... ok\ntest_lock_is_created_then_reused (test_project_and_lock.ProjectAndLockTests.test_lock_is_created_then_reused) ... ok\ntest_locked_mode_rejects_stale_project (test_project_and_lock.ProjectAndLockTests.test_locked_mode_rejects_stale_project) ... ok\ntest_normalization_collapses_python_name_separators (test_requirements.RequirementTests.test_normalization_collapses_python_name_separators) ... ok\ntest_requirement_combines_all_constraints (test_requirements.RequirementTests.test_requirement_combines_all_constraints) ... ok\ntest_unsupported_pep_508_syntax_is_rejected (test_requirements.RequirementTests.test_unsupported_pep_508_syntax_is_rejected) ... ok\ntest_versions_are_numeric_and_ordered (test_requirements.RequirementTests.test_versions_are_numeric_and_ordered) ... ok\ntest_conflict_reports_direct_and_transitive_origins (test_resolver.ResolverTests.test_conflict_reports_direct_and_transitive_origins) ... ok\ntest_existing_lock_is_a_preference_not_a_hard_constraint (test_resolver.ResolverTests.test_existing_lock_is_a_preference_not_a_hard_constraint) ... ok\ntest_selects_latest_compatible_transitive_versions (test_resolver.ResolverTests.test_selects_latest_compatible_transitive_versions) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 0.581s\n\nOK\n",
+      "stdout": ""
+    },
+    {
+      "command": [
+        "<python>",
+        "-m",
+        "toyuv",
+        "init",
+        "<temp>\\demo"
+      ],
+      "cwd": "<repo>\\examples\\toyuv",
+      "duration_ms": 118,
+      "label": "init-project",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Initialized demo at <temp>\\demo\n"
+    },
+    {
+      "command": [
+        "<python>",
+        "-m",
+        "toyuv",
+        "add",
+        "greet-demo"
+      ],
+      "cwd": "<temp>\\demo",
+      "duration_ms": 270,
+      "label": "add-and-sync-transitive-dependency",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Lockfile created: <temp>\\demo\\toyuv.lock\nInstalled color-demo==2.0.0\nInstalled greet-demo==2.0.0\n"
+    },
+    {
+      "command": [
+        "<python>",
+        "-m",
+        "toyuv",
+        "tree"
+      ],
+      "cwd": "<temp>\\demo",
+      "duration_ms": 115,
+      "label": "render-dependency-tree",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "demo\n`-- greet-demo==2.0.0\n    `-- color-demo==2.0.0\n"
+    },
+    {
+      "command": [
+        "<python>",
+        "-m",
+        "toyuv",
+        "run",
+        "python",
+        "-c",
+        "from greet_demo import greet; print(greet('evidence'))"
+      ],
+      "cwd": "<temp>\\demo",
+      "duration_ms": 226,
+      "label": "run-import-in-managed-environment",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Environment already matches the lockfile\n<blue>Welcome, evidence!</blue>\n"
+    },
+    {
+      "command": [
+        "<python>",
+        "-m",
+        "toyuv",
+        "add",
+        "greet-demo>=2",
+        "legacy-demo",
+        "--no-sync"
+      ],
+      "cwd": "<temp>\\demo",
+      "duration_ms": 121,
+      "label": "reject-conflict-and-rollback",
+      "returncode": 2,
+      "stderr": "error: cannot select a version for greet-demo; constraints: greet-demo>=2.0.0 (from project); greet-demo<2.0.0 (from legacy-demo==1.0.0)\n",
+      "stdout": ""
+    }
+  ],
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.13",
+    "python_implementation": "CPython",
+    "uv": "uv 0.9.26 (ee4f00362 2026-01-15)"
+  },
+  "generated_at": "2026-08-30T12:36:35.832687+00:00",
+  "schema_version": 1,
+  "source_tree_sha256": "sha256:b168900062bd4cd4007ed9fdc6c14f560968ae0d2b2bc71c8655769662345c78",
+  "status": "passed",
+  "verified_claims": {
+    "conflict_exit_code": 2,
+    "conflict_rolled_back_project": true,
+    "installed_versions": {
+      "color-demo": "2.0.0",
+      "greet-demo": "2.0.0"
+    },
+    "managed_import_output": "<blue>Welcome, evidence!</blue>",
+    "resolved_versions": {
+      "color-demo": "2.0.0",
+      "greet-demo": "2.0.0"
+    },
+    "test_count": 15
+  }
+}
