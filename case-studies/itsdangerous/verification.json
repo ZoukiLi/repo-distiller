@@ -1,0 +1,118 @@
+{
+  "backend": "codex",
+  "claims": {
+    "behavioral_fidelity": false,
+    "description": "Bounded teaching model generated without a source runtime scenario"
+  },
+  "commands": [
+    {
+      "actual_exit_code": 0,
+      "argv": [
+        "<python>",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "command": "{python} -m unittest discover -s tests -v",
+      "duration_seconds": 0.109,
+      "expected_exit_code": 0,
+      "expected_output_contains": [],
+      "missing_output": [],
+      "name": "unit-tests",
+      "output_truncated": false,
+      "passed": true,
+      "stderr": "test_encoding_round_trip_and_idempotence (test_teaching_model.TeachingModelTests.test_encoding_round_trip_and_idempotence) ... ok\ntest_serializer_is_repeatable_and_reports_bad_payload (test_teaching_model.TeachingModelTests.test_serializer_is_repeatable_and_reports_bad_payload) ... ok\ntest_signer_success_rotation_and_tamper (test_teaching_model.TeachingModelTests.test_signer_success_rotation_and_tamper) ... ok\ntest_timed_serializer_returns_aware_timestamp (test_teaching_model.TeachingModelTests.test_timed_serializer_returns_aware_timestamp) ... ok\ntest_timed_success_and_expiry (test_teaching_model.TeachingModelTests.test_timed_success_and_expiry) ... ok\ntest_url_safe_compression_and_corruption (test_teaching_model.TeachingModelTests.test_url_safe_compression_and_corruption) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.001s\n\nOK\n",
+      "stdout": "",
+      "timed_out": false
+    },
+    {
+      "actual_exit_code": 0,
+      "argv": [
+        "<python>",
+        "-m",
+        "toy_itsdangerous",
+        "concepts"
+      ],
+      "command": "{python} -m toy_itsdangerous concepts",
+      "duration_seconds": 0.062,
+      "expected_exit_code": 0,
+      "expected_output_contains": [
+        "Exc",
+        "Signer"
+      ],
+      "missing_output": [],
+      "name": "concept-list",
+      "output_truncated": false,
+      "passed": true,
+      "stderr": "",
+      "stdout": "concept-1: Exc\nconcept-2: Signer\nconcept-3: Encoding\nconcept-4: Timed\nconcept-5: Serializer\nconcept-6: Url Safe\n",
+      "timed_out": false
+    }
+  ],
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "metrics": {
+    "python_source_files": 10,
+    "python_source_lines": 399,
+    "referenced_concept_files": [
+      "toy_itsdangerous/encoding.py",
+      "toy_itsdangerous/exc.py",
+      "toy_itsdangerous/serializer.py",
+      "toy_itsdangerous/signer.py",
+      "toy_itsdangerous/timed.py",
+      "toy_itsdangerous/url_safe.py"
+    ]
+  },
+  "passed": true,
+  "project": "case-studies/itsdangerous/toy-itsdangerous",
+  "project_digest": "sha256:48524275f7edcc5064b488d46aff836aa7ea018ebe41d77f6ac5d4634aae7454",
+  "schema_version": 1,
+  "source_repository": {
+    "branch": "main",
+    "commit": "672971d66a2ef9f85151e53283113f33d642dabd",
+    "dirty": false,
+    "input": "https://github.com/pallets/itsdangerous.git",
+    "name": "itsdangerous",
+    "remote": "https://github.com/pallets/itsdangerous.git",
+    "resolved_path": "source/repository"
+  },
+  "spec_digest": "sha256:e2e53c3734c3a060d4c5d3df4f222516dd5e0acb7cee1ddeaa968a65eed1cde3",
+  "structural_checks": [
+    {
+      "detail": "schema_version=1",
+      "name": "manifest-schema",
+      "passed": true
+    },
+    {
+      "detail": "expected sha256:e2e53c3734c3a060d4c5d3df4f222516dd5e0acb7cee1ddeaa968a65eed1cde3, got sha256:e2e53c3734c3a060d4c5d3df4f222516dd5e0acb7cee1ddeaa968a65eed1cde3",
+      "name": "spec-binding",
+      "passed": true
+    },
+    {
+      "detail": "expected=['concept-1', 'concept-2', 'concept-3', 'concept-4', 'concept-5', 'concept-6'], actual=['concept-1', 'concept-2', 'concept-3', 'concept-4', 'concept-5', 'concept-6']",
+      "name": "concept-closure",
+      "passed": true
+    },
+    {
+      "detail": "all manifest paths exist",
+      "name": "concept-files",
+      "passed": true
+    },
+    {
+      "detail": "399/2000 Python source lines",
+      "name": "source-budget",
+      "passed": true
+    },
+    {
+      "detail": "before=sha256:48524275f7edcc5064b488d46aff836aa7ea018ebe41d77f6ac5d4634aae7454, after=sha256:48524275f7edcc5064b488d46aff836aa7ea018ebe41d77f6ac5d4634aae7454",
+      "name": "verification-does-not-modify-source",
+      "passed": true
+    }
+  ],
+  "verified_at": "2026-08-30T14:04:04Z"
+}

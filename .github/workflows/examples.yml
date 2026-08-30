@@ -1,10 +1,26 @@
-name: examples
+name: test-and-cases
 
 on:
   push:
   pull_request:
 
 jobs:
+  engine:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Test generic engine and CLI pipeline
+        run: python -m unittest discover -s tests -v
+        env:
+          PYTHONPATH: src
+
   verify-toyuv:
     strategy:
       matrix:
@@ -18,3 +34,5 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Verify toyuv case study
         run: python scripts/verify_toyuv.py
+      - name: Verify generic-engine itsdangerous case study
+        run: python scripts/verify_itsdangerous_case.py

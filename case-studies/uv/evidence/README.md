@@ -1,8 +1,8 @@
 # toyuv verification evidence
 
 [`verification.json`](verification.json) is produced by
-[`scripts/verify_toyuv.py`](../../scripts/verify_toyuv.py). The verifier uses only the Python
-standard library and the checked-in `examples/toyuv` source.
+[`scripts/verify_toyuv.py`](../../../scripts/verify_toyuv.py). The verifier uses only the Python
+standard library and the checked-in `case-studies/uv/toyuv` source.
 
 It performs four independent checks:
 

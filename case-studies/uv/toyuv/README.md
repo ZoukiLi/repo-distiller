@@ -3,8 +3,8 @@
 `toyuv` 是一个受 [uv](https://docs.astral.sh/uv/) 启发的教学型 Python 包管理器。它不调用
 `pip` 完成核心工作，而是用少量纯 Python 代码展示五个状态如何衔接：
 
-它也是 [Repo Distiller](../../README.md) 的第一个完整案例。独立验证器和一次真实运行报告位于
-[`evidence/toyuv`](../../evidence/toyuv/)，用于证明这里的代码不仅可读，而且可以实际解析、
+它也是 [Repo Distiller](../../../README.md) 的第一个完整案例。独立验证器和一次真实运行报告位于
+[`../evidence`](../evidence/)，用于证明这里的代码不仅可读，而且可以实际解析、
 安装、导入、运行并拒绝冲突输入。
 
 ```text

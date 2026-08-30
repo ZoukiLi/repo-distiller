@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "project_name": "toy-itsdangerous",
+  "package_name": "toy_itsdangerous",
+  "backend": "codex",
+  "spec_digest": "sha256:e2e53c3734c3a060d4c5d3df4f222516dd5e0acb7cee1ddeaa968a65eed1cde3",
+  "claims": {
+    "behavioral_fidelity": false,
+    "description": "Bounded teaching model generated without a source runtime scenario"
+  },
+  "omissions": [
+    "Not drop-in compatible",
+    "No alternate serializers or algorithms",
+    "No legacy and framework integrations",
+    "No production hardening"
+  ],
+  "verification": [
+    {"name": "tests", "command": "{python} -m unittest discover -s tests -v"}
+  ],
+  "concepts": [
+    {"id": "concept-1", "name": "Exc", "files": ["toy_itsdangerous/exc.py"]},
+    {"id": "concept-2", "name": "Signer", "files": ["toy_itsdangerous/signer.py"]},
+    {"id": "concept-3", "name": "Encoding", "files": ["toy_itsdangerous/encoding.py"]},
+    {"id": "concept-4", "name": "Timed", "files": ["toy_itsdangerous/timed.py"]},
+    {"id": "concept-5", "name": "Serializer", "files": ["toy_itsdangerous/serializer.py"]},
+    {"id": "concept-6", "name": "Url Safe", "files": ["toy_itsdangerous/url_safe.py"]}
+  ]
+}

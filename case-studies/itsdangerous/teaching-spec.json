@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "source": {
+    "input": "https://github.com/pallets/itsdangerous.git",
+    "resolved_path": "source/repository",
+    "name": "itsdangerous",
+    "commit": "672971d66a2ef9f85151e53283113f33d642dabd",
+    "branch": "main",
+    "remote": "https://github.com/pallets/itsdangerous.git",
+    "dirty": false
+  },
+  "title": "Teaching model of itsdangerous",
+  "audience": "A developer who can read Python but is new to the source project",
+  "learning_goal": "Understand the smallest executable model that connects the public interface of itsdangerous to its core state and correctness rules.",
+  "concepts": [
+    {
+      "id": "concept-1",
+      "name": "Exc",
+      "role": "core_mechanism",
+      "summary": "Model the responsibilities visible in src/itsdangerous/exc.py: BadData, BadSignature, BadTimeSignature, SignatureExpired, BadHeader, BadPayload",
+      "importance": 0.82,
+      "evidence_ids": ["source:source_file:bf1ac38c8685"],
+      "source_paths": ["src/itsdangerous/exc.py"]
+    },
+    {
+      "id": "concept-2",
+      "name": "Signer",
+      "role": "core_mechanism",
+      "summary": "Model the responsibilities visible in src/itsdangerous/signer.py: SigningAlgorithm, NoneAlgorithm, _lazy_sha1, HMACAlgorithm, _make_keys_list, Signer",
+      "importance": 0.82,
+      "evidence_ids": ["source:source_file:1d0e89827237"],
+      "source_paths": ["src/itsdangerous/signer.py"]
+    },
+    {
+      "id": "concept-3",
+      "name": "Encoding",
+      "role": "core_mechanism",
+      "summary": "Model the responsibilities visible in src/itsdangerous/encoding.py: want_bytes, base64_encode, base64_decode, int_to_bytes, bytes_to_int",
+      "importance": 0.805,
+      "evidence_ids": ["source:source_file:11914e260a0d"],
+      "source_paths": ["src/itsdangerous/encoding.py"]
+    },
+    {
+      "id": "concept-4",
+      "name": "Timed",
+      "role": "core_mechanism",
+      "summary": "Model the responsibilities visible in src/itsdangerous/timed.py: TimestampSigner, TimedSerializer",
+      "importance": 0.8044,
+      "evidence_ids": ["source:source_file:937262ddb835"],
+      "source_paths": ["src/itsdangerous/timed.py"]
+    },
+    {
+      "id": "concept-5",
+      "name": "Serializer",
+      "role": "core_mechanism",
+      "summary": "Model the responsibilities visible in src/itsdangerous/serializer.py: _PDataSerializer, is_text_serializer, Serializer",
+      "importance": 0.7972,
+      "evidence_ids": ["source:source_file:b91b387e77f0"],
+      "source_paths": ["src/itsdangerous/serializer.py"]
+    },
+    {
+      "id": "concept-6",
+      "name": "Url Safe",
+      "role": "core_mechanism",
+      "summary": "Model the responsibilities visible in src/itsdangerous/url_safe.py: URLSafeSerializerMixin, URLSafeSerializer, URLSafeTimedSerializer",
+      "importance": 0.715,
+      "evidence_ids": ["source:source_file:c39504dfb78d"],
+      "source_paths": ["src/itsdangerous/url_safe.py"]
+    }
+  ],
+  "scenarios": [],
+  "omissions": [
+    "Performance optimizations, platform-specific compatibility layers, and ecosystem breadth are documented rather than reproduced.",
+    "The generated project is a teaching model, not a drop-in replacement for the source product.",
+    "Behavioral fidelity is provisional because no successful opt-in runtime trace was collected."
+  ],
+  "output": {
+    "project_name": "toy-itsdangerous",
+    "package_name": "toy_itsdangerous",
+    "description": "Executable teaching model distilled from itsdangerous",
+    "modules": ["model", "cli", "exc", "signer", "encoding", "timed", "serializer", "url_safe"],
+    "max_source_lines": 2000,
+    "python_requires": ">=3.11"
+  },
+  "verification": [
+    {
+      "name": "unit-tests",
+      "command": "{python} -m unittest discover -s tests -v",
+      "expected_exit_code": 0,
+      "expected_output_contains": []
+    },
+    {
+      "name": "concept-list",
+      "command": "{python} -m toy_itsdangerous concepts",
+      "expected_exit_code": 0,
+      "expected_output_contains": ["Exc", "Signer"]
+    }
+  ],
+  "evidence_digest": "sha256:1c7e01f6c68ae7ae5d6b50c66e083c64b6a29f1ab6b86e423c5b5347993ac73b",
+  "generated_by": "repo-distiller heuristic planner 0.1.0",
+  "warnings": [
+    "history: history truncated to 50 commits",
+    "runtime: no runtime scenarios supplied"
+  ],
+  "provenance": {
+    "collector_status": {
+      "docs": "completed",
+      "history": "partial",
+      "runtime": "skipped",
+      "source": "completed"
+    },
+    "evidence_stats": {
+      "content_digest": "sha256:b7c2c4dabf3ff61ee2456bdf5a939f9ab4c63f804b156bfaf8d8ded6fa64b923",
+      "evidence_by_kind": {
+        "documentation": 16,
+        "history_commit": 50,
+        "history_hotspots": 1,
+        "manifest": 2,
+        "repository_summary": 1,
+        "source_file": 16
+      },
+      "evidence_count": 86
+    },
+    "selection_policy": "static importance + import centrality + history hotspots + invariant boost",
+    "portable_case_copy": "machine-specific resolved_path normalized after the completed run"
+  }
+}

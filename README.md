@@ -1,103 +1,130 @@
 # Repo Distiller
 
-[![Examples](https://github.com/ZoukiLi/repo-distiller/actions/workflows/examples.yml/badge.svg)](https://github.com/ZoukiLi/repo-distiller/actions/workflows/examples.yml)
+[![test-and-cases](https://github.com/ZoukiLi/repo-distiller/actions/workflows/examples.yml/badge.svg)](https://github.com/ZoukiLi/repo-distiller/actions/workflows/examples.yml)
 
-Repo Distiller explores a practical question:
+Repo Distiller turns a bounded analysis of a source repository into a small, executable Python
+teaching project. It keeps deterministic evidence collection separate from Agent judgment, emits an
+editable `TeachingSpec`, gives the Coding Agent only a hash-bound context pack, and verifies the
+result without calling the model that generated it.
 
-> Can we turn a large production repository into a small, executable Python model that teaches its
-> core semantics without pretending to reproduce the whole product?
+It is not a source-to-source compiler and it does not promise drop-in compatibility. Its output is a
+tested simulation of a selected semantic closure: public interface, core mechanisms, and important
+correctness rules. Performance machinery, compatibility breadth, and optional ecosystem features
+remain visible as explicit omissions.
 
-The intended pipeline combines bounded source analysis, design-history evidence, representative
-runtime scenarios, a written teaching specification, Coding Agent synthesis, and executable
-verification. Deterministic tools collect facts; the Agent makes explicit simplification choices;
-tests try to falsify the result.
+## Install and run
 
-> Status: case-study prototype. The first complete example is real and reproducible, but the
-> repository-agnostic extraction engine is not implemented yet.
+Repo Distiller requires Python 3.11 or newer and has no runtime dependencies.
 
-## Evidence that the approach works
+```bash
+uv tool install .
+repo-distiller run /path/to/repository --backend auto
+```
 
-The first case study distills the project workflow of
-[uv](https://docs.astral.sh/uv/concepts/projects/) into
-[`examples/toyuv`](examples/toyuv/): a teaching-sized package manager written in Python.
+The `auto` backend uses the local Codex CLI when available. If it is unavailable or fails, the run
+falls back to an explicitly labeled executable concept/state scaffold. Use `--backend codex` when a
+behavior-oriented Agent implementation is mandatory; that mode fails instead of silently falling
+back.
 
-`toyuv` is not a mock CLI around `pip`. It implements its own:
+Add representative source behavior only when you trust the repository and command:
 
-- normalized requirements and a deliberately bounded version language;
-- backtracking dependency resolver with transitive conflict detection;
-- lockfile, stale-input detection, and locked-version preferences;
-- exact virtual-environment synchronization without invoking pip;
-- artifact hashes, owned-file tracking, and unsafe-path rejection;
-- `init`, `add`, `lock`, `sync`, `run`, and `tree` user flows.
+```bash
+repo-distiller run /path/to/repository \
+  --scenario "python -m the_tool --help" \
+  --scenario "python -m unittest discover -s tests" \
+  --allow-exec \
+  --backend codex
+```
 
-The checked-in [verification report](evidence/toyuv/verification.json) records a real execution on
-the current source tree. It proves the following bounded claims:
+Runtime commands are never inferred or executed by default. With `--allow-exec`, each supplied
+command runs in a fresh copy with VCS data and common build caches removed. A copied workspace is a
+containment boundary, not an OS security sandbox; do not execute untrusted repositories on a host
+that contains secrets.
 
-| Claim | Executable evidence |
-| --- | --- |
-| The implementation is internally consistent | 15 unit and integration tests pass |
-| A fresh project can resolve and install transitive dependencies | `greet-demo` locks and installs `color-demo` |
-| Installed artifacts are genuinely importable | the managed interpreter prints `<blue>Welcome, evidence!</blue>` |
-| The environment reflects exact locked versions | lock and state files both contain `greet-demo==2.0.0` and `color-demo==2.0.0` |
-| Conflicts are rejected without corrupting project intent | an incompatible `legacy-demo` add exits non-zero and restores `pyproject.toml` |
+## Pipeline
 
-Run the same verification locally:
+```mermaid
+flowchart LR
+    A[Git repository] --> B[Source / docs / history collectors]
+    S[Explicit runtime scenarios] --> B
+    B --> C[Versioned evidence.json]
+    C --> D[Concept ranking]
+    D --> E[Editable TeachingSpec]
+    E --> F[Bounded context pack]
+    F --> G[Codex or deterministic scaffold]
+    G --> H[Independent verifier]
+    H --> I[Executable project + provenance report]
+```
 
-```powershell
+The individual stages can also be inspected and rerun:
+
+```bash
+repo-distiller analyze <repo>
+repo-distiller spec <run>/evidence.json
+repo-distiller build <run>/teaching-spec.json --backend codex
+repo-distiller verify <run>/generated-project
+```
+
+Each command prints its primary artifact. `run` prints the run directory.
+Agent model and effort remain at the user's configured defaults unless `--agent-model` and
+`--agent-reasoning` are supplied.
+
+## What a run records
+
+Every run lives under `.repo-distiller/runs/<timestamp>-<repo>-<id>/` by default:
+
+```text
+run-manifest.json          input, tool version, stages, failures, human overrides
+evidence.json              repository identity and typed source/docs/history/runtime facts
+TEACHING_SPEC.md           readable teaching contract
+teaching-spec.json         machine-readable, evidence-bound contract
+context/                   selected source files and exact Agent inputs
+agent-prompt.txt           complete synthesis prompt (Codex backend)
+agent-stdout.jsonl         live Agent event stream
+agent-stderr.log           Agent diagnostics
+agent-last-message.txt     final Agent response
+build-metadata.json        backend, prompt/context/output digests and fallback reason
+generated-project/         runnable Python teaching artifact
+verification-report.json  structural checks, commands, output, metrics and tree digest
+```
+
+Facts, inferences, unknowns, truncation warnings, failed collectors, source commit/dirty state, and
+the selected backend are retained rather than erased. A user can apply controlled spec edits with
+`repo-distiller spec ... --overrides changes.json`; accepted keys and the override file digest are
+recorded in `run-manifest.json`.
+
+## Case studies
+
+[`case-studies/uv`](case-studies/uv/) contains the original hand-curated uv → toyuv baseline.
+`toyuv` implements requirements, backtracking resolution, locking, exact environment sync, artifact
+validation, rollback, and CLI workflows. Its independent verifier runs 15 tests plus a transitive
+install/import and a conflict rollback scenario:
+
+```bash
 python scripts/verify_toyuv.py
 ```
 
-To refresh the committed machine-readable evidence after an intentional implementation change:
+The case study is evidence that the target artifact can be educational and executable. It is kept
+separate from engine runs so the earlier manual work is not misrepresented as automated output.
 
-```powershell
-python scripts/verify_toyuv.py --write-evidence
+[`case-studies/itsdangerous`](case-studies/itsdangerous/) is the first complete generic-engine case.
+It records a public source commit and portable TeachingSpec, and checks in the Codex-generated
+HMAC/key-rotation/serialization/timestamp model. Re-run its generic verifier with:
+
+```bash
+python scripts/verify_itsdangerous_case.py
 ```
-
-The report includes a SHA-256 digest of the example source, so results cannot be presented as
-evidence for a different tree accidentally.
-
-## What this proves—and what it does not
-
-This case study proves that the proposed workflow can produce a runnable, packaged, testable
-teaching implementation whose simplifications are documented and whose behavior is independently
-checked. It is stronger evidence than a prose-only architecture sketch.
-
-It does **not** yet prove that arbitrary repositories can be distilled automatically. In
-particular, uv's Git-history analysis was limited by partial-clone object retrieval, and the
-selection of the initial teaching boundary still involved Agent judgment. These limitations are
-recorded in the example's [TeachingSpec](examples/toyuv/TEACHING_SPEC.md).
-
-## Relationship to the companion repositories
-
-Repo Distiller is a downstream synthesis project, not a drop-in replacement for the earlier
-analysis tools:
-
-- [`github-knowledge-rag`](https://github.com/ZoukiLi/github-knowledge-rag) discovers repositories,
-  extracts source structure, and makes the resulting knowledge searchable;
-- [`git-design-intent`](https://github.com/ZoukiLi/git-design-intent) turns Git history and static
-  structure into bounded, traceable design evidence;
-- Repo Distiller starts from bounded evidence and an explicit teaching contract, then produces a
-  smaller executable artifact with independent verification.
-
-The long-term engine may reuse evidence produced by both tools, but this repository currently
-proves the artifact and verification side of that pipeline through a complete case study.
 
 ## Repository layout
 
 ```text
-repo-distiller/
-├── docs/METHOD.md                 # evidence-to-artifact workflow and contracts
-├── scripts/verify_toyuv.py       # independent, dependency-free verifier
-├── evidence/toyuv/               # checked-in report and interpretation
-└── examples/toyuv/               # complete runnable case study
+src/repo_distiller/        generic CLI, schemas, collectors, planning, synthesis, verification
+tests/                     engine unit and end-to-end tests
+docs/                      method and artifact contracts
+case-studies/uv/           hand-curated first baseline and source-bound evidence
+case-studies/itsdangerous/ automated generic-engine case and portable evidence
+scripts/verify_toyuv.py    independent legacy case verifier
 ```
 
-## Next milestone
-
-Turn the manually orchestrated case study into a reusable engine:
-
-1. define a language-neutral repository evidence graph;
-2. accept explicit user scenarios and teaching-level constraints;
-3. rank core concepts without treating cold error paths as disposable;
-4. emit a versioned `TeachingSpec` before generating code;
-5. require every generated example to ship a verifier and source-bound evidence report.
+See [`docs/METHOD.md`](docs/METHOD.md) for the selection model and
+[`docs/ARTIFACTS.md`](docs/ARTIFACTS.md) for the machine-readable contracts.

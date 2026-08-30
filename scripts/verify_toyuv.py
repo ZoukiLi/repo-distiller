@@ -24,9 +24,9 @@ import time
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXAMPLE = ROOT / "examples" / "toyuv"
+EXAMPLE = ROOT / "case-studies" / "uv" / "toyuv"
 SOURCE = EXAMPLE / "src"
-DEFAULT_REPORT = ROOT / "evidence" / "toyuv" / "verification.json"
+DEFAULT_REPORT = ROOT / "case-studies" / "uv" / "evidence" / "verification.json"
 IGNORED_PARTS = {".venv", "dist", "__pycache__", ".pytest_cache", ".ruff_cache"}
 
 
@@ -259,7 +259,7 @@ def main(argv: list[str] | None = None) -> int:
         nargs="?",
         const=str(DEFAULT_REPORT),
         metavar="PATH",
-        help="write the JSON report (default: evidence/toyuv/verification.json)",
+        help="write the JSON report (default: case-studies/uv/evidence/verification.json)",
     )
     args = parser.parse_args(argv)
     try:
