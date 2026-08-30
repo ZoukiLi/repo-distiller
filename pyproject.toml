@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "repo-distiller"
+version = "0.1.0"
+description = "Turn repository evidence into small, executable teaching implementations"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Repo Distiller contributors" }]
+dependencies = []
+
+[project.scripts]
+repo-distiller = "repo_distiller.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/repo_distiller"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

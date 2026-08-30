@@ -66,6 +66,25 @@ Every example must provide a verifier that:
 The verifier's report is evidence for a precise source tree and environment. It is not evidence of
 generalization to unrelated repositories.
 
+## Engine implementation
+
+The current engine applies the method through five independently runnable stages:
+
+1. `analyze` walks bounded source and documentation files, parses Python AST structure, samples Git
+   history, and optionally executes only user-supplied scenarios in disposable copies;
+2. `spec` scores entry points, import centrality, history hotspots, and likely invariants, then emits
+   both JSON and readable Markdown before any code generation;
+3. `build` copies only the selected source paths into a digest-bound context pack and invokes Codex,
+   or emits an explicitly non-faithful deterministic scaffold when requested or in `auto` fallback;
+4. `verify` checks the spec binding, exact concept/file closure, source budget, tests, observable CLI
+   output, and a before/after project-tree digest without invoking the generating model;
+5. `run` records all four stages plus repository preparation in one append-style manifest.
+
+The ranking is a practical baseline rather than a semantic oracle. A cold security module receives
+an invariant boost, but the planner can still miss a domain rule that is neither named clearly nor
+covered by docs, history, or supplied runtime scenarios. That uncertainty is why runtime evidence,
+editable specs, explicit omissions, and falsifiable generated tests remain separate contracts.
+
 ## toyuv application
 
 The first example preserves four uv-inspired states:
